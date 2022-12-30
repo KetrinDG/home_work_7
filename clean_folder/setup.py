@@ -1,4 +1,4 @@
-from setuptools import setup, find_namespace_packages
+from setuptools import setup, find_packages
 
 setup(
       name='clean',
@@ -7,7 +7,8 @@ setup(
       author='author',
       author_email='degtyareva.ev1@gmail.com',
       url='',
-      entry_points={'console_scripts': ['clean_folder == clean_folder.clean']},
-      license='MIT',
-      packages=find_namespace_packages()
+      modules=['clean'],
+      entry_points={'console_scripts': ['clean-folder=clean_folder.clean:main']},
+      packages = find_packages(),
+      include_package_data=True
       )

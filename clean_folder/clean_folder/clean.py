@@ -1,6 +1,7 @@
 import shutil
 import os
 from pathlib import Path
+import sys
 from typing import List
 
 
@@ -26,19 +27,12 @@ CATEGORIES = {
     'apk': ['apk']
 }
 
-path = input('Input folder path: ')
-
-def main():
-    create_folders_from_list(path, CATEGORIES)
-    get_subfolder_paths(path)
-    get_file_paths(path)
-    sort_files(path)
-    remove_empty_folders(path)
-
 
 # Напишем функцию для создания папок из списка названий
 def create_folders_from_list(folder_path, folder_names):
-    os.mkdir(os.path.join(folder_path, 'unknowns'))
+    #os.mkdir(os.path.join(folder_path, 'unknowns'))
+    if not Path(os.path.join(folder_path, 'unknowns')).exists():
+        os.mkdir(os.path.join(folder_path, 'unknowns'))
     for folder in folder_names:
         if not os.path.exists(os.path.join(folder_path, folder)):
             os.mkdir(os.path.join(folder_path, folder))
@@ -57,6 +51,7 @@ def get_file_paths(folder_path) -> list:
 def sort_files(folder_path):
     file_paths = get_file_paths(folder_path)  # пути файлов
     file_path: os.path
+
     for file_path in Path(folder_path).glob('**/*'):
         if file_path.is_dir():
             continue
@@ -74,13 +69,14 @@ def sort_files(folder_path):
         for category, extensions in CATEGORIES.items():
             if extension in extensions:
                 print(f'Moving {file_path} in {category} folder\n')
-                os.rename(file_path, os.path.join(path, category, file_name))
+                #os.rename(file_path, os.path.join(path, category, file_name))
+                os.rename(file_path, os.path.join(folder_path, category, file_name))
                 moved = True
                 break
+
         if not moved:
             file_destination = os.path.join(folder_path, 'unknowns')
             os.rename(file_path, os.path.join(file_destination, file_name))
-
 
 
 # удаляем пустые папки
@@ -92,6 +88,25 @@ def remove_empty_folders(folder_path):
             os.rmdir(p)
 
 
+
+
+def main():
+    try:
+        path = sys.argv[1]
+    except IndexError:
+        print("You need type path to folder as param on call script")
+        return None
+
+    if not Path(path).exists():
+        print(f"Sorry, path - {path} does not exist. Try again.")
+        return None
+
+    create_folders_from_list(path, CATEGORIES)
+    get_subfolder_paths(path)
+    get_file_paths(path)
+    sort_files(path)
+    remove_empty_folders(path)
+
+
 if __name__ == "__main__":
     main()
-
