@@ -8,8 +8,7 @@ setup(
       author_email='degtyareva.ev1@gmail.com',
       url='',
       modules=['clean'],
-      entry_points={'console_scripts': ['pip install -e']},
-      packages = find_packages(where="clean_folder"),
-      package_dir = {"": "clean_folder"},
+      entry_points={'console_scripts': ['clean-folder=clean_folder.clean:main']},
+      packages = find_packages(),
       include_package_data=True
       )
